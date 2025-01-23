@@ -25,8 +25,21 @@
             </ul>
         </div>
         <div id="content">
-            <p>Here is some text in the main content area.</p>
-            <p>Feel free to add tasks to your TODO list!</p>
+            <main>
+                <aside>
+                    <ul id="project-list"></ul>
+                </aside>
+                <section>
+                    <div id="task-list"></div>
+                    <form id="add-task-form">
+                        <input type="text" id="title" placeholder="Task Title" required />
+                        <input type="date" id="due-date" required />
+                        <input type="text" id="priority" placeholder="Priority" required />
+                        <textarea id="description" placeholder="Description"></textarea>
+                        <button type="submit">Add Task</button>
+                    </form>
+                </section>
+            </main>
         </div>
     </div>
 </body>
