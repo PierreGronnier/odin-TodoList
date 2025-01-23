@@ -1,0 +1,26 @@
+@font-face {
+    font-family: "Space Grotesk";
+    font-style: normal;
+    font-weight: 400;
+    src: url("./fonts/SpaceGrotesk.ttf") format("truetype");
+}
+
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    font-family: "Space Grotesk";
+}
+
+header {
+    position: static;
+    height: 75px;
+    background-color: #7ec8e0;
+}
+
+h1 {
+    color: #000000;
+    font-size: 3em;
+    padding: 5px;
+    margin-left: 2%;
+}
