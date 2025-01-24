@@ -18,29 +18,48 @@
                 <li>Week</li>
                 <li>Month</li>
             </ul>
-
             <ul class="menu-project">
                 <li class="menu-title">Project</li>
                 <li>Starter project</li>
             </ul>
         </div>
-        <div id="content">
-            <main>
-                <aside>
-                    <ul id="project-list"></ul>
-                </aside>
-                <section>
-                    <div id="task-list"></div>
-                    <form id="add-task-form">
-                        <input type="text" id="title" placeholder="Task Title" required />
-                        <input type="date" id="due-date" required />
-                        <input type="text" id="priority" placeholder="Priority" required />
-                        <textarea id="description" placeholder="Description"></textarea>
-                        <button type="submit">Add Task</button>
+        <main>
+            <div class="add-task-bg">
+            <button id="add-task-btn">Add Task</button>
+            </div>
+            <div id="content"></div>
+            <div id="modal" class="hidden">
+                <div class="modal-content">
+                    <h2>Create Task</h2>
+                    <form id="task-form">
+                        <label>
+                            Title:
+                            <input type="text" id="task-title" required>
+                        </label>
+                        <label>
+                            Description:
+                            <textarea id="task-description" required style="min-height: 80px;"></textarea>
+                        </label>
+                        <label>
+                            Due Date:
+                            <input type="date" id="task-due-date" required>
+                        </label>
+                        <label>
+                            Priority:
+                            <select id="task-priority">
+                                <option value="Low">Low</option>
+                                <option value="Medium">Medium</option>
+                                <option value="High">High</option>
+                            </select>
+                        </label>
+                        <div class="buttons">
+                            <button type="submit">Create</button>
+                            <button type="button" id="cancel-btn">Cancel</button>
+                        </div>
                     </form>
-                </section>
-            </main>
-        </div>
+                </div>
+            </div>            
+        </main>
     </div>
 </body>
 </html>
