@@ -19,15 +19,19 @@
                 <li>Month</li>
             </ul>
             <ul class="menu-project">
-                <li class="menu-title">Project</li> 
-                <li>Starter project</li>
-            </ul>
+                <li class="menu-title">
+                    Project
+                    <button id="add-project-btn" class="icon-btn">+</button>
+                </li> 
+                <ul id="project-list"></ul>
+            </ul>            
         </div>
         <main>
             <div class="add-task-bg">
-            <button id="add-task-btn">Add Task</button>
+                <button id="add-task-btn">Add Task</button>
             </div>
             <div id="content"></div>
+
             <div id="modal" class="hidden">
                 <div class="modal-content">
                     <h2>Create Task</h2>
@@ -60,8 +64,29 @@
                         </div>
                     </form>
                 </div>
-            </div>            
+            </div>
+
+            <div id="project-modal" class="hidden">
+                <div class="modal-content">
+                    <h2>Create Project</h2>
+                    <form id="project-form">
+                        <label>
+                            Title:
+                            <input type="text" id="project-title" required>
+                        </label>
+                        <label>
+                            Description:
+                            <textarea id="project-description" required></textarea>
+                        </label>
+                        <div class="buttons">
+                            <button type="submit">Create</button>
+                            <button type="button" id="cancel-project-btn">Cancel</button>
+                        </div>
+                    </form>
+                </div>
+            </div>
         </main>
     </div>
+    <script src="index.js"></script>
 </body>
 </html>

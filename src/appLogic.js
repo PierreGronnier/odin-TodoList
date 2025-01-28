@@ -1,11 +1,21 @@
-import Task from "./task";
-import Project from "./Project";
-
-export function createTask(title, description, dueDate, priority, idProject) {
-    return new Task(title, description, dueDate, priority, idProject);
-}
+let projectIdCounter = 1;
+let taskIdCounter = 1;
 
 export function createProject(title, description) {
-    const idProject = `${title}-${Date.now()}`;
-    return new Project(idProject, title, description);
+  return {
+    idProject: projectIdCounter++,
+    title,
+    description,
+  };
+}
+
+export function createTask(title, description, dueDate, priority, idProject) {
+  return {
+    idTask: taskIdCounter++,
+    title,
+    description,
+    dueDate,
+    priority,
+    idProject,
+  };
 }
