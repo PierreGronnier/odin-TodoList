@@ -1,86 +1,187 @@
-import { format } from "date-fns";
+import AppLogic from './appLogic.js';
+import {
+    isToday,
+    isWithinInterval,
+    parseISO,
+    startOfWeek,
+    endOfWeek,
+    startOfMonth,
+    endOfMonth,
+    addMonths,
+    startOfDay,
+    endOfDay
+} from 'date-fns';
 
-export function getProjectName(idProject, projects) {
-  const project = projects.find((p) => p.idProject === parseInt(idProject, 10));
-  return project ? project.title : "Unknown Project";
-}
+export default {
+    currentDeleteType: null,
+    currentDeleteId: null,
 
-export function addTasksToDOM(tasks, projects, projectId) {
-  const contentDiv = document.getElementById("content");
-  contentDiv.innerHTML = ""; 
+    initEventListeners() {
+        document.getElementById('add-task-btn').addEventListener('click', () => this.toggleModal('task'));
+        document.getElementById('add-project-btn').addEventListener('click', () => this.toggleModal('project'));
 
-  const project = projects.find((p) => p.idProject === projectId);
+        document.getElementById('task-form').addEventListener('submit', (e) => this.handleTaskSubmit(e));
+        document.getElementById('project-form').addEventListener('submit', (e) => this.handleProjectSubmit(e));
 
-  if (project) {
-    const projectDescriptionDiv = document.createElement("div");
-    projectDescriptionDiv.classList.add("project-description");
-    projectDescriptionDiv.innerHTML = `
-      <h2>${project.title}</h2>
-      <p>${project.description}</p>
-    `;
-    contentDiv.appendChild(projectDescriptionDiv);
-  }
+        document.getElementById('cancel-btn').addEventListener('click', () => this.toggleModal());
+        document.getElementById('cancel-project-btn').addEventListener('click', () => this.toggleModal());
 
-  if (tasks.length > 0) {
-    tasks.forEach((task) => {
-      const taskDiv = document.createElement("div");
-      taskDiv.classList.add("task");
+        document.getElementById('confirm-delete-btn').addEventListener('click', () => this.handleConfirmDelete());
+        document.getElementById('cancel-delete-btn').addEventListener('click', () => this.toggleDeleteModal(false));
 
-      const formattedDate = format(new Date(task.dueDate), "dd MMMM yyyy");
-      const projectName = getProjectName(task.idProject, projects);
+        document.querySelector('.menu').addEventListener('click', (e) => {
+            if (e.target.tagName === 'LI') {
+                this.handleMenuClick(e.target.textContent);
+            }
+        });
+    },
 
-      taskDiv.innerHTML = `
-        <h3>${task.title}</h3>
-        <p>${task.description}</p>
-        <p><strong>Due:</strong> ${formattedDate}</p>
-        <p><strong>Priority:</strong> ${task.priority}</p>
-        <p><strong>Project:</strong> ${projectName}</p>
-      `;
+    deleteItem(type, id) {
+        this.currentDeleteType = type;
+        this.currentDeleteId = id;
+        this.toggleDeleteModal(true);
+    },
 
-      contentDiv.appendChild(taskDiv);
-    });
-  } else {
-    const noTasksMessage = document.createElement("p");
-    noTasksMessage.textContent = "No tasks found for this project.";
-    noTasksMessage.classList.add("no-tasks-message");
-    contentDiv.appendChild(noTasksMessage);
-  }
-}
-export function populateProjectDropdown(projects) {
-  const dropdown = document.getElementById("task-idProject");
-  dropdown.innerHTML = "";
+    toggleModal(type = null) {
+        document.querySelectorAll('.modal').forEach(modal => {
+            modal.classList.add('hidden');
+        });
 
-  projects.forEach((project) => {
-    const option = document.createElement("option");
-    option.value = project.idProject;
-    option.textContent = project.title;
-    dropdown.appendChild(option);
-  });
-}
+        if (type === 'task') {
+            document.getElementById('modal').classList.remove('hidden');
+            this.populateProjectDropdown();
+        } else if (type === 'project') {
+            document.getElementById('project-modal').classList.remove('hidden');
+        }
 
-export function addProjectsToDOM(projects, tasks) {
-  const projectList = document.getElementById("project-list");
-  if (!projectList) return;
+        document.getElementById('task-form').reset();
+        document.getElementById('project-form').reset();
+    },
 
-  projectList.innerHTML = "";
+    handleTaskSubmit(e) {
+        e.preventDefault();
+        const taskData = {
+            title: document.getElementById('task-title').value,
+            description: document.getElementById('task-description').value,
+            dueDate: document.getElementById('task-due-date').value,
+            priority: document.getElementById('task-priority').value,
+            idProject: document.getElementById('task-idProject').value
+        };
 
-  projects.forEach((project) => {
-    const projectItem = document.createElement("li");
-    projectItem.textContent = project.title;
-    projectItem.addEventListener("click", () => {
-      const filteredTasks = tasks.filter((task) => task.idProject === project.idProject);
-      addTasksToDOM(filteredTasks, projects, project.idProject);
-    });
-    projectList.appendChild(projectItem);
-  });
+        AppLogic.addTask(taskData);
+        this.renderTasks();
+        this.toggleModal();
+    },
 
-  const addProjectBtn = document.getElementById("add-project-btn");
-  if (addProjectBtn) {
-    addProjectBtn.addEventListener("click", () => {
-      const projectModal = document.getElementById("project-modal");
-      if (projectModal) {
-        projectModal.classList.remove("hidden");
-      }
-    });
-  }
-}
+    handleMenuClick(filter) {
+        const today = new Date();
+
+        if (filter === 'All') {
+            this.renderTasks();
+            return;
+        }
+
+        const tasks = AppLogic.tasks.filter(task => {
+            const taskDate = parseISO(task.dueDate);
+
+            switch (filter) {
+                case 'Today':
+                    return isToday(taskDate);
+
+                case 'Week':
+                    return isWithinInterval(taskDate, {
+                        start: startOfWeek(today, {
+                            weekStartsOn: 1
+                        }),
+                        end: endOfWeek(today, {
+                            weekStartsOn: 1
+                        })
+                    });
+
+                case 'Month':
+                    const nextMonth = addMonths(today, 1);
+                    return isWithinInterval(taskDate, {
+                        start: startOfMonth(nextMonth),
+                        end: endOfMonth(nextMonth)
+                    });
+
+                default:
+                    return false;
+            }
+        });
+
+        this.renderTasks(tasks);
+    },
+
+    handleProjectSubmit(e) {
+        e.preventDefault();
+        const projectData = {
+            title: document.getElementById('project-title').value,
+            description: document.getElementById('project-description').value
+        };
+
+        AppLogic.addProject(projectData);
+        this.renderProjects();
+        this.toggleModal();
+    },
+
+    handleConfirmDelete() {
+        if (this.currentDeleteType === 'task') {
+            AppLogic.deleteTask(this.currentDeleteId);
+        } else {
+            AppLogic.deleteProject(this.currentDeleteId);
+        }
+        this.renderProjects();
+        this.renderTasks();
+        this.toggleDeleteModal(false);
+    },
+
+    toggleDeleteModal(show = true) {
+        const modal = document.getElementById('delete-modal');
+        modal.classList.toggle('hidden', !show);
+    },
+
+    showProjectTasks(projectId) {
+        const tasks = AppLogic.getTasksByProject(projectId);
+        this.renderTasks(tasks);
+    },
+
+    renderTasks(tasks = AppLogic.tasks) {
+        const content = document.getElementById('content');
+        if (tasks.length === 0) {
+            content.innerHTML = '<p class="no-tasks-message">No tasks found.</p>';
+        } else {
+            content.innerHTML = tasks.map(task => `
+        <div class="task">
+          <div class="task-header">
+            <h3>${task.title}</h3>
+            <div class="task-actions">
+              <img src="./assets/delete.png" alt="Delete" onclick="DOM.deleteItem('task', '${task.id}')">
+            </div>
+          </div>
+          <p>${task.description}</p>
+          <small>Due: ${task.dueDate}</small>
+        </div>
+      `).join('');
+        }
+    },
+
+    renderProjects() {
+        const projectList = document.getElementById('project-list');
+        projectList.innerHTML = AppLogic.projects.map(project => `
+      <li class="project-item">
+        <span onclick="DOM.showProjectTasks('${project.id}')">${project.title}</span>
+        <div class="project-actions">
+          <img src="./assets/delete.png" alt="Delete" onclick="DOM.deleteItem('project', '${project.id}')">
+        </div>
+      </li>
+    `).join('');
+    },
+
+    populateProjectDropdown() {
+        const select = document.getElementById('task-idProject');
+        select.innerHTML = AppLogic.projects.map(project =>
+            `<option value="${project.id}">${project.title}</option>`
+        ).join('');
+    }
+};

@@ -1,28 +1,60 @@
+import {
+  format,
+  addDays,
+  addMonths
+} from 'date-fns';
+import DOM from './DOM.js';
+import AppLogic from './appLogic.js';
+import Project from './project.js';
+import Task from './task.js';
 import "./styles.css";
-import { populateProjectDropdown, addProjectsToDOM, addTasksToDOM} from "./DOM";
-import { initializeTaskEvents } from "./task";
-import { initializeProjectEvents } from "./project";
-import { loadFromLocalStorage } from "./storage";
-import { createProject, createTask } from "./appLogic";
 
-const projects = [];
-const tasks = [];
+window.DOM = DOM;
 
-loadFromLocalStorage(projects, tasks);
+document.addEventListener('DOMContentLoaded', () => {
+  DOM.initEventListeners();
+  DOM.renderProjects();
+  DOM.renderTasks();
 
-if (projects.length === 0) {
-  const defaultProject = createProject("Starter Project", "This is the default project.");
-  projects.push(defaultProject);
-  tasks.push(createTask("Default Task 1", "Description of task 1", "2025-01-31", "High", defaultProject.idProject));
-  tasks.push(createTask("Default Task 2", "Description of task 2", "2025-02-05", "Medium", defaultProject.idProject));
-}
+  const defaultProjectTitle = "Starter Project";
+  const defaultProjectExists = AppLogic.projects.some(project => project.title === defaultProjectTitle);
 
-document.addEventListener("DOMContentLoaded", () => {
-  populateProjectDropdown(projects);
-  addProjectsToDOM(projects, tasks);
-  const initialProjectId = projects[0]?.idProject; 
-  const initialTasks = tasks.filter((task) => task.idProject === initialProjectId);
-  addTasksToDOM(initialTasks, projects, initialProjectId); 
-  initializeTaskEvents(projects, tasks);
-  initializeProjectEvents(projects, tasks);
+  if (!defaultProjectExists) {
+      const defaultProject = AppLogic.addProject(new Project(defaultProjectTitle, "Default description"));
+
+      AppLogic.addTask(new Task(
+          "Complete the project",
+          "Finish the TODO list project by implementing all features.",
+          format(new Date(), 'yyyy-MM-dd'),
+          "High",
+          defaultProject.id
+      ));
+
+      AppLogic.addTask(new Task(
+          "Learn JavaScript",
+          "Deepen your understanding of JavaScript and ES6+ features.",
+          format(addDays(new Date(), 3), 'yyyy-MM-dd'),
+          "Medium",
+          defaultProject.id
+      ));
+
+      AppLogic.addTask(new Task(
+          "Read a book",
+          "Read a new book to improve your knowledge.",
+          format(addDays(new Date(), 10), 'yyyy-MM-dd'),
+          "Low",
+          defaultProject.id
+      ));
+
+      AppLogic.addTask(new Task(
+          "Start a new hobby",
+          "Pick up a new hobby to keep yourself entertained.",
+          format(addMonths(new Date(), 1), 'yyyy-MM-dd'),
+          "Medium",
+          defaultProject.id
+      ));
+
+      DOM.renderProjects();
+      DOM.renderTasks();
+  }
 });
