@@ -18,6 +18,20 @@ export default {
         Storage.saveTasks(this.tasks);
     },
 
+    editTask(taskId, updatedTaskData) {
+        const task = this.tasks.find(task => task.id === taskId);
+        if (task) {
+
+            task.title = updatedTaskData.title;
+            task.description = updatedTaskData.description;
+            task.dueDate = updatedTaskData.dueDate;
+            task.priority = updatedTaskData.priority;
+            task.idProject = updatedTaskData.idProject;
+
+            Storage.saveTasks(this.tasks);
+        }
+    },
+
     addProject(projectData) {
         const newProject = new Project(projectData.title, projectData.description);
         this.projects.push(newProject);

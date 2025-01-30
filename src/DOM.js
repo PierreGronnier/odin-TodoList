@@ -8,8 +8,6 @@ import {
     startOfMonth,
     endOfMonth,
     addMonths,
-    startOfDay,
-    endOfDay
 } from 'date-fns';
 
 export default {
@@ -42,24 +40,45 @@ export default {
         this.toggleDeleteModal(true);
     },
 
-    toggleModal(type = null) {
+    toggleModal(type = null, isEditing = false) {
         document.querySelectorAll('.modal').forEach(modal => {
-            modal.classList.add('hidden');
+            modal.classList.add('hidden'); 
         });
-
+    
         if (type === 'task') {
-            document.getElementById('modal').classList.remove('hidden');
-            this.populateProjectDropdown();
+            document.getElementById('modal').classList.remove('hidden'); 
+            this.populateProjectDropdown(); 
+    
+            if (!isEditing) {
+                document.getElementById('task-form').reset();
+            }
         } else if (type === 'project') {
             document.getElementById('project-modal').classList.remove('hidden');
+            document.getElementById('project-form').reset();
         }
+    },
 
-        document.getElementById('task-form').reset();
-        document.getElementById('project-form').reset();
+    editTask(taskId) {
+        const task = AppLogic.tasks.find(task => task.id === taskId);
+    
+        if (task) {
+            document.getElementById('task-title').value = task.title;
+            document.getElementById('task-description').value = task.description;
+            document.getElementById('task-due-date').value = task.dueDate;
+            document.getElementById('task-priority').value = task.priority;
+            document.getElementById('task-idProject').value = task.idProject;
+    
+            this.currentTaskId = taskId; 
+    
+            this.toggleModal('task', true);
+        } else {
+            console.error('Task not found!');
+        }
     },
 
     handleTaskSubmit(e) {
         e.preventDefault();
+    
         const taskData = {
             title: document.getElementById('task-title').value,
             description: document.getElementById('task-description').value,
@@ -67,8 +86,14 @@ export default {
             priority: document.getElementById('task-priority').value,
             idProject: document.getElementById('task-idProject').value
         };
-
-        AppLogic.addTask(taskData);
+    
+        if (this.currentTaskId) {
+            AppLogic.editTask(this.currentTaskId, taskData);
+            this.currentTaskId = null; 
+        } else {
+            AppLogic.addTask(taskData);
+        }
+    
         this.renderTasks();
         this.toggleModal();
     },
@@ -153,10 +178,12 @@ export default {
         } else {
             content.innerHTML = tasks.map(task => `
         <div class="task">
+          <div class="priority-bar ${this.getPriorityClass(task.priority)}"></div>
           <div class="task-header">
             <h3>${task.title}</h3>
             <div class="task-actions">
               <img src="./assets/delete.png" alt="Delete" onclick="DOM.deleteItem('task', '${task.id}')">
+              <img src="./assets/edit.png" alt="Edit" class="edit" onclick="DOM.editTask('${task.id}')">
             </div>
           </div>
           <p>${task.description}</p>
@@ -183,5 +210,19 @@ export default {
         select.innerHTML = AppLogic.projects.map(project =>
             `<option value="${project.id}">${project.title}</option>`
         ).join('');
+    },
+
+    getPriorityClass(priority) {
+        switch (priority.toLowerCase()) {
+            case 'low':
+                return 'priority-low';
+            case 'medium':
+                return 'priority-medium';
+            case 'high':
+                return 'priority-high';
+            default:
+                return '';
+        }
     }
+
 };
