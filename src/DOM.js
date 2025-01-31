@@ -101,6 +101,9 @@ export default {
     handleMenuClick(filter) {
         const today = new Date();
 
+        const content = document.getElementById('content');
+        content.innerHTML = ''; 
+
         if (filter === 'All') {
             this.renderTasks();
             return;
@@ -168,29 +171,53 @@ export default {
 
     showProjectTasks(projectId) {
         const tasks = AppLogic.getTasksByProject(projectId);
-        this.renderTasks(tasks);
+        const project = AppLogic.projects.find(project => project.id === projectId);
+    
+        if (project) {
+            const content = document.getElementById('content');
+            content.innerHTML = `
+                <div class="project-info">
+                    <h2>${project.title}</h2>
+                    <p>${project.description}</p>
+                <div class="project-bar"></div>
+                </div>
+            `;
+            this.renderTasks(tasks);
+        } else {
+            console.error('Project not found!');
+        }
     },
 
     renderTasks(tasks = AppLogic.tasks) {
         const content = document.getElementById('content');
+        const tasksContainer = document.createElement('div');
+        tasksContainer.id = 'tasks-container';
+    
         if (tasks.length === 0) {
-            content.innerHTML = '<p class="no-tasks-message">No tasks found.</p>';
+            tasksContainer.innerHTML = '<p class="no-tasks-message">No tasks found.</p>';
         } else {
-            content.innerHTML = tasks.map(task => `
-        <div class="task">
-          <div class="priority-bar ${this.getPriorityClass(task.priority)}"></div>
-          <div class="task-header">
-            <h3>${task.title}</h3>
-            <div class="task-actions">
-              <img src="./assets/delete.png" alt="Delete" onclick="DOM.deleteItem('task', '${task.id}')">
-              <img src="./assets/edit.png" alt="Edit" class="edit" onclick="DOM.editTask('${task.id}')">
-            </div>
-          </div>
-          <p>${task.description}</p>
-          <small>Due: ${task.dueDate}</small>
-        </div>
-      `).join('');
+            tasksContainer.innerHTML = tasks.map(task => `
+                <div class="task">
+                    <div class="priority-bar ${this.getPriorityClass(task.priority)}"></div>
+                    <div class="task-header">
+                        <h3>${task.title}</h3>
+                        <div class="task-actions">
+                            <img src="./assets/delete.png" alt="Delete" onclick="DOM.deleteItem('task', '${task.id}')">
+                            <img src="./assets/edit.png" alt="Edit" class="edit" onclick="DOM.editTask('${task.id}')">
+                        </div>
+                    </div>
+                    <p>${task.description}</p>
+                    <small>Due: ${task.dueDate}</small>
+                </div>
+            `).join('');
         }
+    
+        const oldTasksContainer = document.getElementById('tasks-container');
+        if (oldTasksContainer) {
+            oldTasksContainer.remove();
+        }
+    
+        content.appendChild(tasksContainer);
     },
 
     renderProjects() {

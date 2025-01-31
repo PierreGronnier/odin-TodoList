@@ -53,8 +53,5 @@ document.addEventListener('DOMContentLoaded', () => {
           "Medium",
           defaultProject.id
       ));
-
-      DOM.renderProjects();
-      DOM.renderTasks();
   }
 });
