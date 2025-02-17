@@ -1,17 +1,17 @@
 export default {
   saveProjects(projects) {
-      localStorage.setItem('projects', JSON.stringify(projects));
+    localStorage.setItem("projects", JSON.stringify(projects));
   },
 
   loadProjects() {
-      return JSON.parse(localStorage.getItem('projects')) || [];
+    return JSON.parse(localStorage.getItem("projects")) || [];
   },
 
   saveTasks(tasks) {
-      localStorage.setItem('tasks', JSON.stringify(tasks));
+    localStorage.setItem("tasks", JSON.stringify(tasks));
   },
 
   loadTasks() {
-      return JSON.parse(localStorage.getItem('tasks')) || [];
-  }
+    return JSON.parse(localStorage.getItem("tasks")) || [];
+  },
 };

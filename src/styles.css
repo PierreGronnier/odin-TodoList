@@ -1,338 +1,362 @@
 :root {
-    --primary-bg: #0e1011;
-    --secondary-bg: #3b3b3b;
-    --hover-bg: #5a5a5a;
-    --text-color: #f3e3e3;
-    --button-primary: #007BFF;
-    --button-primary-hover: #0056b3;
-    --button-danger: #f44336;
-    --button-danger-hover: #d32f2f;
-    --task-bg: #fff;
-    --task-border: #ddd;
-    --modal-bg: rgba(0, 0, 0, 0.5);
-    --priority-low: #4caf50;
-    --priority-medium: #ffc107;
-    --priority-high: #f44336;
-    --project-bg: #cacaca;
+  --primary-bg: #0e1011;
+  --secondary-bg: #3b3b3b;
+  --hover-bg: #5a5a5a;
+  --text-color: #f3e3e3;
+  --button-primary: #007bff;
+  --button-primary-hover: #0056b3;
+  --button-danger: #f44336;
+  --button-danger-hover: #d32f2f;
+  --task-bg: #fff;
+  --task-border: #ddd;
+  --modal-bg: rgba(0, 0, 0, 0.5);
+  --priority-low: #4caf50;
+  --priority-medium: #ffc107;
+  --priority-high: #f44336;
+  --project-bg: #cacaca;
 }
 
 @font-face {
-    font-family: "Space Grotesk";
-    font-style: normal;
-    font-weight: 400;
-    src: url("./fonts/SpaceGrotesk.ttf") format("truetype");
+  font-family: "Space Grotesk";
+  font-style: normal;
+  font-weight: 400;
+  src: url("./fonts/SpaceGrotesk.ttf") format("truetype");
 }
 
 * {
-    margin: 0;
-    padding: 0;
-    box-sizing: border-box;
-    font-family: "Space Grotesk", sans-serif;
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+  font-family: "Space Grotesk", sans-serif;
 }
 
 body {
-    height: 100vh;
-    display: grid;
-    grid-template-rows: auto 1fr;
+  height: 100vh;
+  display: grid;
+  grid-template-rows: auto 1fr;
 }
 
 header {
-    background-color: var(--primary-bg);
-    color: var(--text-color);
-    display: flex;
-    align-items: center;
-    padding: 1rem 2%;
+  background-color: var(--primary-bg);
+  color: var(--text-color);
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 1rem 2%;
 }
 
 h1 {
-    font-size: 2.5rem;
+  font-size: 2.5rem;
 }
 
 #container {
-    display: grid;
-    grid-template-columns: 15% 1fr;
-    height: 100%;
+  display: grid;
+  grid-template-columns: 15% 1fr;
+  height: 100%;
 }
 
 #siderbar {
-    background-color: var(--secondary-bg);
-    color: var(--text-color);
-    display: flex;
-    flex-direction: column;
-    padding: 1rem;
-    gap: 1rem;
+  background-color: var(--secondary-bg);
+  color: var(--text-color);
+  display: flex;
+  flex-direction: column;
+  padding: 1rem;
+  gap: 1rem;
 }
 
-.menu, .menu-project {
-    list-style: none;
+.menu,
+.menu-project {
+  list-style: none;
 }
 
-.menu li, .menu-project li {
-    padding: 0.5rem 1rem;
-    border-radius: 5px;
-    cursor: pointer;
-
+.menu li,
+.menu-project li {
+  padding: 0.5rem 1rem;
+  border-radius: 5px;
+  cursor: pointer;
 }
 
-.menu li:hover, .menu-project li:hover {
-    background-color: var(--hover-bg);
+.menu li:hover,
+.menu-project li:hover {
+  background-color: var(--hover-bg);
 }
 
 .menu-project .menu-title {
-    font-weight: bold;
-    cursor: default;
-    display: flex;
-    align-items: center;
-    gap: 0.5rem;
+  font-weight: bold;
+  cursor: default;
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
 }
 
 .menu-project li:not(.menu-title) {
-    padding-left: 3rem;
+  padding-left: 3rem;
 }
 
 .icon-btn {
-    background: none;
-    border: none;
-    font-size: 2rem;
-    cursor: pointer;
-    color: var(--button-primary);
-    display: flex;
-    align-items: center;
-    justify-content: center;
+  background: none;
+  border: none;
+  font-size: 2rem;
+  cursor: pointer;
+  color: var(--button-primary);
+  display: flex;
+  align-items: center;
+  justify-content: center;
 }
 
 .icon-btn:hover {
-    color: var(--button-primary-hover);
+  color: var(--button-primary-hover);
 }
 
 #content {
-    background-color: var(--text-color);
-    padding: 2rem;
-    overflow-y: auto;
-    flex-grow: 1;
+  background-color: var(--text-color);
+  padding: 2rem;
+  overflow-y: auto;
+  flex-grow: 1;
 }
 
 .project-info {
-    margin-bottom: 20px;
-    padding: 15px;
-    background: #ffffff; 
-    border-radius: 8px; 
-    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1); 
-    border: 1px solid #e0e0e0; 
-    position: relative; 
-    overflow: hidden; 
+  margin-bottom: 20px;
+  padding: 15px;
+  background: #ffffff;
+  border-radius: 8px;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+  border: 1px solid #e0e0e0;
+  position: relative;
+  overflow: hidden;
 }
 
 .project-bar {
-    position: absolute;
-    bottom: 0;
-    left: 0;
-    width: 100%;
-    height: 6px; 
-    background-color: var(--button-primary);
-    border-radius: 0 0 8px 8px;
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  width: 100%;
+  height: 6px;
+  background-color: var(--button-primary);
+  border-radius: 0 0 8px 8px;
 }
 
 .project-info h2 {
-    margin-bottom: 0.75rem;
-    font-size: 1.75rem;
-    color: var(--primary-bg); 
-    font-weight: 600;
+  margin-bottom: 0.75rem;
+  font-size: 1.75rem;
+  color: var(--primary-bg);
+  font-weight: 600;
 }
 
 .project-info p {
-    color: var(--hover-bg); 
-    font-size: 1.1rem;
-    line-height: 1.5; 
-    margin-bottom: 0; 
+  color: var(--hover-bg);
+  font-size: 1.1rem;
+  line-height: 1.5;
+  margin-bottom: 0;
 }
 
 main {
-    display: flex;
-    flex-direction: column;
-    height: 100%;
+  display: flex;
+  flex-direction: column;
+  height: 100%;
 }
 
 .modal {
-    position: fixed;
-    top: 0;
-    left: 0;
-    width: 100%;
-    height: 100%;
-    background: var(--modal-bg);
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    z-index: 1000;
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: var(--modal-bg);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  z-index: 1000;
 }
 
 .modal.hidden {
-    display: none !important;
+  display: none !important;
 }
 
 .modal-content {
-    background: var(--task-bg);
-    padding: 25px;
-    border-radius: 10px;
-    box-shadow: 0 5px 15px rgba(0, 0, 0, 0.3);
-    width: 350px;
-    display: flex;
-    flex-direction: column;
-    gap: 15px;
+  background: var(--task-bg);
+  padding: 25px;
+  border-radius: 10px;
+  box-shadow: 0 5px 15px rgba(0, 0, 0, 0.3);
+  width: 350px;
+  display: flex;
+  flex-direction: column;
+  gap: 15px;
 }
 
 label {
-    display: flex;
-    flex-direction: column;
-    font-size: 1em;
-    margin-bottom: 10px;
+  display: flex;
+  flex-direction: column;
+  font-size: 1em;
+  margin-bottom: 10px;
 }
 
-input, textarea, select {
-    margin-top: 5px;
-    padding: 8px;
-    border: 1px solid #ccc;
-    border-radius: 5px;
-    font-size: 14px;
+input,
+textarea,
+select {
+  margin-top: 5px;
+  padding: 8px;
+  border: 1px solid #ccc;
+  border-radius: 5px;
+  font-size: 14px;
 }
 
 textarea {
-    resize: none;
-    min-height: 100px;
+  resize: none;
+  min-height: 100px;
 }
 
 .buttons {
-    display: flex;
-    justify-content: space-between;
-    margin-top: 20px;
+  display: flex;
+  justify-content: space-between;
+  margin-top: 20px;
 }
 
 button {
-    padding: 10px 15px;
-    border: none;
-    border-radius: 5px;
-    font-size: 14px;
-    cursor: pointer;
+  padding: 10px 15px;
+  border: none;
+  border-radius: 5px;
+  font-size: 14px;
+  cursor: pointer;
 }
 
 button[type="submit"] {
-    background-color: var(--button-primary);
-    color: white;
+  background-color: var(--button-primary);
+  color: white;
 }
 
 button[type="submit"]:hover {
-    background-color: var(--button-primary-hover);
+  background-color: var(--button-primary-hover);
 }
 
 button[type="button"] {
-    background-color: var(--button-danger);
-    color: white;
+  background-color: var(--button-danger);
+  color: white;
 }
 
 button[type="button"]:hover {
-    background-color: var(--button-danger-hover);
+  background-color: var(--button-danger-hover);
 }
 
 #add-task-btn {
-    display: block;
-    margin: 20px auto;
-    padding: 12px 24px;
-    background-color: var(--primary-bg);
-    color: var(--text-color);
-    border: none;
-    border-radius: 5px;
-    font-size: 16px;
-    cursor: pointer;
+  display: block;
+  margin: 20px auto;
+  padding: 12px 24px;
+  background-color: var(--primary-bg);
+  color: var(--text-color);
+  border: none;
+  border-radius: 5px;
+  font-size: 16px;
+  cursor: pointer;
 }
 
 #add-task-btn:hover {
-    background-color: var(--secondary-bg);
+  background-color: var(--secondary-bg);
 }
 
 .add-task-bg {
-    background-color: var(--hover-bg);
+  background-color: var(--hover-bg);
 }
 
 .task {
-    position: relative;
-    border: 1px solid var(--task-border);
-    padding: 1rem;
-    border-radius: 8px;
-    margin-bottom: 1rem;
-    background: var(--task-bg);
-    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+  position: relative;
+  border: 1px solid var(--task-border);
+  padding: 1rem;
+  border-radius: 8px;
+  margin-bottom: 1rem;
+  background: var(--task-bg);
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
 }
 
 .task:hover {
-    transform: scale(1.01); 
-    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.15); 
+  transform: scale(1.01);
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.15);
 }
 
 .priority-bar {
-    position: absolute;
-    top: 0;
-    left: 0;
-    width: 6px;
-    height: 100%;
-    border-radius: 8px 0 0 8px;
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 6px;
+  height: 100%;
+  border-radius: 8px 0 0 8px;
 }
 
 .priority-low {
-    background-color: var(--priority-low);
+  background-color: var(--priority-low);
 }
 
 .priority-medium {
-    background-color: var(--priority-medium);
+  background-color: var(--priority-medium);
 }
 
 .priority-high {
-    background-color: var(--priority-high);
+  background-color: var(--priority-high);
 }
 
 .project-description {
-    background-color: var(--project-bg);
-    padding: 1rem;
-    margin-bottom: 1rem;
-    border-radius: 5px;
-    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+  background-color: var(--project-bg);
+  padding: 1rem;
+  margin-bottom: 1rem;
+  border-radius: 5px;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
 }
 
 .project-description h2 {
-    margin-bottom: 0.5rem;
-    font-size: 1.5rem;
+  margin-bottom: 0.5rem;
+  font-size: 1.5rem;
 }
 
 .no-tasks-message {
-    color: #777;
-    font-style: italic;
-    text-align: center;
-    margin-top: 1rem;
+  color: #777;
+  font-style: italic;
+  text-align: center;
+  margin-top: 1rem;
 }
 
-
-.task-actions, .project-actions {
-    display: flex;
-    gap: 10px;
+.task-actions,
+.project-actions {
+  display: flex;
+  gap: 10px;
 }
 
-.task-actions img:hover, .project-actions img:hover {
-    opacity: 0.7;
+.task-actions img:hover,
+.project-actions img:hover {
+  opacity: 0.7;
 }
 
-.task-header, .project-item {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
+.task-header,
+.project-item {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
 }
 
-.task-actions img, .project-actions img {
-    content: url("./assets/delete.png");
-    width: 20px;
-    height: 20px;
+.task-actions img,
+.project-actions img {
+  content: url("./assets/delete.png");
+  width: 20px;
+  height: 20px;
 }
 
-.task-action, img.edit{
-    content: url("./assets/edit.png");
-    width: 20px;
-    height: 20px;
+.task-action,
+img.edit {
+  content: url("./assets/edit.png");
+  width: 20px;
+  height: 20px;
+}
+
+.github-link {
+  display: inline-block;
+  filter: brightness(0) invert(1);
+  width: 32px; /* Ajustez la taille selon vos besoins */
+  height: 32px; /* Ajustez la taille selon vos besoins */
+}
+
+.github-logo {
+  width: 100%;
+  height: 100%;
+  background-image: url("assets/github.png");
+  background-size: contain;
+  background-repeat: no-repeat;
 }
